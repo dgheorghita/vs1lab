@@ -14,11 +14,13 @@
 
 <body>
     <header class="header">
-        <img src="./images/location.png" class="header__image" alt="an image of a map and location">
-        <h1 class="header__title">GeoTagApp</h1>
-        <nav class="header__navigation">
-            <a href="#">About</a> | <a href="#">Help</a> | <a href="/">Home</a>
-        </nav>
+        <div class="header-elements">
+            <img src="./images/location.png" class="header__image" alt="an image of a map and location">
+            <h1 class="header__title">GeoTagApp</h1>
+            <nav class="header__navigation">
+                <a href="#">About</a> | <a href="#">Help</a> | <a href="/">Home</a>
+            </nav>
+        </div>
     </header>
 
     <main class="main">
@@ -27,9 +29,18 @@
 
             <!-- ############### VS1Lab 1a Form 1 Start -->
             <form id="tag-form" action="/tagging" method="post">
-
-                <!-- ... your code here ... -->
-
+                <fieldset>
+                    <Legend>Add a new GeoTag</Legend>
+                    <label for="latitude">Latitude:</label>
+                    <input type="text" id="latitude" value="49.01379" disabled>
+                    <label for="longitude">Longitude:</label>
+                    <input type="text" id="longitude" value="8.390071" disabled>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" placeholder="e.g Central Berlin" maxlength="10" required>
+                    <label for="hashtag">Hashtag:</label>
+                    <input type="text" id="hashtag" placeholder="e.g #ber" maxlength="11" pattern="#[A-Za-z]{0,10}">
+                    <input type="submit" id="tagbutton" value="Add Tag">
+                </fieldset>
             </form>
             <!-- ############### VS1Lab 1a Form 1 End -->
 
@@ -40,9 +51,12 @@
 
             <!-- ############### VS1Lab 1a Form 2 Start -->
             <form class="discovery__search" id="discoveryFilterForm" action="/discovery" method="post">
-
-                <!-- ... your code here ... -->
-
+                <fieldset>
+                    <Legend>Search</Legend>
+                    <label for="searchterm">Search term or keywords:</label>
+                    <input type="text" id="searchterm" placeholder="e.g Berlin">
+                    <input type="submit" id="searchbutton" value="Search">
+                </fieldset>
             </form>
             <!-- ############### VS1Lab 1a Form 2 End -->
 
