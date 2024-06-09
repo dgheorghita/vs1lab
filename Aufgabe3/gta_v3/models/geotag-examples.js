@@ -15,6 +15,8 @@ class GeoTagExamples {
     /**
      * Provides some geoTag data
      */
+
+
     static get tagList() {
         return [
             ['Castle', 49.013790, 8.404435, '#sight'],
@@ -30,6 +32,16 @@ class GeoTagExamples {
             ['Building K', 49.013190, 8.392090, '#campus'],
         ];
     }
+
+    
 }
+
+const GeoTagStore = require('../models/geotag-store');
+
+GeoTagExamples.tagList.forEach(tag => {
+    const [name, latitude, longitude, hashtag] = tag;
+    GeoTagStore.addGeoTag(tag);
+});
+
 
 module.exports = GeoTagExamples;

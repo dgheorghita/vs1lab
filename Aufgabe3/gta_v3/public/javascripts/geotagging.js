@@ -96,28 +96,4 @@ class MapManager {
         return mapQuestUrl;
     }
 
-    updateLocation() {
-        LocationHelper.findLocation((location) => {
-            const mapImage = document.getElementById('mapView');
-            const latitudeView = document.getElementById('latitude');
-            const longitudeView = document.getElementById('longitude');
-            const latitudeDiscovery = document.getElementById('latitude-discovery');
-            const longitudeDiscovery = document.getElementById('longitude-discovery');
-            
-            const mapUrl = this.getMapUrl(latitude, longitude);
-            latitudeView.value = location.latitude;
-            longitudeView.value = location.longitude;
-            latitudeDiscovery.value = location.latitude;
-            longitudeDiscovery.value = location.longitude;
-            mapImage.src = mapUrl;
-        });
-    }
 }
-
-const mapManager = new MapManager('uuYdZFl1rKT9QFS97N4EjI4UzJYKgewL');
-
-// Wait for the page to fully load its DOM content, then call updateLocation
-document.addEventListener("DOMContentLoaded", () => {
-    //alert("Please change the script 'geotagging.js'");
-    mapManager.updateLocation();
-});

@@ -25,7 +25,37 @@
  */
 class InMemoryGeoTagStore{
 
-    // TODO: ... your code here ...
+    constructor() {
+        this.geoTagsArray = [];
+    }
+
+    addGeoTag(geoTag) {
+        this.geoTagsArray.push(geoTag);
+    }
+
+    removeGeoTag(locationName) {
+        this.geoTagsArray = this.geoTagsArray.filter(tag => tag.locationName !== locationName);
+    }
+
+    getNearbyGeoTags({ latitude, longitude }, radius){
+        return geoTagsArray.filter(geotag => {
+          latitudeDistance = Math.abs(latitude - geotag.latitude);
+          longitudeDistance = Math.abs(longitude - geotag.longitude);
+          
+          return (longitudeDistance < longitude + radius && latitudeDistance < latitude + radius);
+        });
+    }
+
+    searchNearbyGeoTags({ latitude, longitude }, radius, locationName, hashTag){
+        const nearbyGeotags = this.getNearbyGeoTags({ latitude, longitude }, radius);
+
+        return nearbyGeotags.filter(geotag => {
+            const nameMatch = geotag.locationNames.toLowerCase().includes(locationName.toLowerCase());
+            const hashtagMatch = geotag.hashtags.toLowerCase().includes(hashTag.toLowerCase());
+            return nameMatch || hashtagMatch;
+          });
+    }
+    
 
 }
 

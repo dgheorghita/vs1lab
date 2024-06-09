@@ -37,4 +37,50 @@ class MapManager {
 
         return mapQuestUrl;
     }
+
+    updateMarkers(tags) {
+    
+        tags.forEach(tag => {
+            console.log(`Adding marker at ${tag.latitude}, ${tag.longitude} named ${tag.name}`);
+            
+        });
+    }
+
+    updateLocation() {
+        
+        const mapImage = document.getElementById('mapView');
+        const latitudeView = document.getElementById('latitude');
+        const longitudeView = document.getElementById('longitude');
+        const latitudeDiscovery = document.getElementById('latitude-discovery');
+        const longitudeDiscovery = document.getElementById('longitude-discovery');
+
+        const mapDiv = document.getElementById('map');
+        const taglist_json = mapDiv.getAttribute('data-tags');
+        const tags = JSON.parse(taglist_json)
+        
+        if (!latitudeView.value || !longitudeView.value) {
+            
+            LocationHelper.findLocation((location) => {
+            
+                latitudeView.value = location.latitude;
+                longitudeView.value = location.longitude;
+                latitudeDiscovery.value = location.latitude;
+                longitudeDiscovery.value = location.longitude;
+    
+                const mapUrl = this.getMapUrl(location.latitude, location.longitude);
+                mapImage.src = mapUrl;
+            });
+        }
+
+        this.updateMarkers(tags);
+    }
+
+    
 }
+
+const mapManager = new MapManager('uuYdZFl1rKT9QFS97N4EjI4UzJYKgewL');
+
+// Wait for the page to fully load its DOM content, then call updateLocation
+document.addEventListener("DOMContentLoaded", () => {
+    mapManager.updateLocation();
+});

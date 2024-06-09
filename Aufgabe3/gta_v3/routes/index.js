@@ -60,7 +60,17 @@ router.get('/', (req, res) => {
  * by radius around a given location.
  */
 
-// TODO: ... your code here ...
+router.post('/tagging', (req, res) => {
+  const { name, latitude, longitude, hashtag } = req.body;
+
+  const newTag = new GeoTag(name, latitude, longitude, hashtag);
+
+  geoTagStore.addGeoTag(newTag);
+
+  const taglist = geoTagStore.getNearbyGeoTags({ latitude: latitude, longitude: longitude}, 10);
+
+  res.render('index', { taglist: taglist, currentCoordinates: { latitude, longitude } });
+});
 
 /**
  * Route '/discovery' for HTTP 'POST' requests.
@@ -78,6 +88,16 @@ router.get('/', (req, res) => {
  * by radius and keyword.
  */
 
-// TODO: ... your code here ...
+router.post('/discovery', (req, res) => {
+  const { locationName, latitude, longitude, hashtag } = req.body;
+
+  let taglist;
+  if (locationName != "" || hashtag != "") {
+    taglist = geoTagStore.searchNearbyGeoTags({ latitude: latitude, longitude: longitude }, 10, locationName, hashtag);
+  } else {
+    taglist = geoTagStore.getNearbyGeoTags({ latitude: latitude, longitude: longitude }, 10);
+  }
+  res.render('index', { taglist: taglist, currentCoordinates: { latitude, longitude } });
+});
 
 module.exports = router;
