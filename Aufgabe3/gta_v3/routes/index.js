@@ -29,7 +29,10 @@ const GeoTag = require('../models/geotag');
  * TODO: implement the module in the file "../models/geotag-store.js"
  */
 // eslint-disable-next-line no-unused-vars
-const GeoTagStore = require('../models/geotag-store');
+const inMemoryGeoTagStore  = require('../models/geotag-store');
+const inMemoryStore = new inMemoryGeoTagStore();
+
+inMemoryStore.loadExamples(); 
 
 /**
  * Route '/' for HTTP 'GET' requests.
@@ -42,7 +45,14 @@ const GeoTagStore = require('../models/geotag-store');
 
 // TODO: extend the following route example if necessary
 router.get('/', (req, res) => {
-  res.render('index', { taglist: [] })
+
+  const { latitude, longitude } = req.query;
+
+  console.log("req:" + req);
+  console.log("req.body:" + req.body.latitude);
+  console.log("req.query:" + req.query.latitude);
+
+  res.render('index', { taglist: inMemoryStore.getAllGeoTags(), latitude: latitude, longitude: longitude })
 });
 
 /**
@@ -65,11 +75,11 @@ router.post('/tagging', (req, res) => {
 
   const newTag = new GeoTag(name, latitude, longitude, hashtag);
 
-  geoTagStore.addGeoTag(newTag);
+  inMemoryStore.addGeoTag(newTag); 
+  
+  const taglist = inMemoryStore.getAllGeoTags();
 
-  const taglist = geoTagStore.getNearbyGeoTags({ latitude: latitude, longitude: longitude}, 10);
-
-  res.render('index', { taglist: taglist, currentCoordinates: { latitude, longitude } });
+  res.render('index', { taglist: taglist , latitude: latitude, longitude: longitude });
 });
 
 /**
@@ -89,15 +99,11 @@ router.post('/tagging', (req, res) => {
  */
 
 router.post('/discovery', (req, res) => {
-  const { locationName, latitude, longitude, hashtag } = req.body;
+  const { latitudeDiscovery, longitudeDiscovery, searchterm } = req.body;
 
-  let taglist;
-  if (locationName != "" || hashtag != "") {
-    taglist = geoTagStore.searchNearbyGeoTags({ latitude: latitude, longitude: longitude }, 10, locationName, hashtag);
-  } else {
-    taglist = geoTagStore.getNearbyGeoTags({ latitude: latitude, longitude: longitude }, 10);
-  }
-  res.render('index', { taglist: taglist, currentCoordinates: { latitude, longitude } });
+  const GeoTags = inMemoryStore.searchNearbyGeoTags(latitudeDiscovery, longitudeDiscovery, 100000, searchterm);
+
+  res.render('index', { taglist: GeoTags, latitude: latitudeDiscovery, longitude: longitudeDiscovery  });
 });
 
 module.exports = router;

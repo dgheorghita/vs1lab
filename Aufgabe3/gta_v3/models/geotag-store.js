@@ -5,6 +5,9 @@
  * Complete all TODOs in the code documentation.
  */
 
+const GeoTagExamples = require("./geotag-examples");
+const GeoTag = require("./geotag");
+
 /**
  * A class for in-memory-storage of geotags
  * 
@@ -23,7 +26,8 @@
  * - The proximity constrained is the same as for 'getNearbyGeoTags'.
  * - Keyword matching should include partial matches from name or hashtag fields. 
  */
-class InMemoryGeoTagStore{
+class InMemoryGeoTagStore {
+    geoTagsArray;
 
     constructor() {
         this.geoTagsArray = [];
@@ -37,25 +41,74 @@ class InMemoryGeoTagStore{
         this.geoTagsArray = this.geoTagsArray.filter(tag => tag.locationName !== locationName);
     }
 
-    getNearbyGeoTags({ latitude, longitude }, radius){
-        return geoTagsArray.filter(geotag => {
-          latitudeDistance = Math.abs(latitude - geotag.latitude);
-          longitudeDistance = Math.abs(longitude - geotag.longitude);
-          
-          return (longitudeDistance < longitude + radius && latitudeDistance < latitude + radius);
+    getNearbyGeoTags(latitude, longitude, radius = 10.0) {
+
+        let foundGeoTags = [];
+
+        for (let i = 0; i < this.geoTagsArray.length; i++) {
+            const currentTag = this.geoTagsArray[i];
+
+            const distance = this.calcDistance(latitude, longitude, currentTag.getLatitude(), currentTag.getLongitude());
+
+            if (distance <= radius) {
+                foundGeoTags.push(this.geoTagsArray[i]);
+            }
+        }
+
+        return foundGeoTags;
+    }
+
+    searchNearbyGeoTags(latitude, longitude, radius = 10.0, searchterm) {
+
+        let nearbyGeoTags = this.getNearbyGeoTags(latitude, longitude, radius);
+
+        let foundGeoTags = [];
+
+        for (let i = 0; i < nearbyGeoTags.length; i++) {
+            const name = nearbyGeoTags[i].getLocationName();
+            const hashtag = nearbyGeoTags[i].getHashtag();
+
+            if (name !== undefined && name.includes(searchterm) ||
+                hashtag !== undefined && hashtag.includes(searchterm)) {
+                foundGeoTags.push(nearbyGeoTags[i]);
+            }
+        }
+
+        return foundGeoTags;
+    }
+
+    calcDistance(lat1, lon1, lat2, lon2) {
+        const toRad = value => (value * Math.PI) / 180;
+        const R = 6371; // Radius of the Earth in km
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
+    getAllGeoTags() {
+        let allGeoTags = [];
+        for (let i = 0; i < this.geoTagsArray.length; i++) {
+            allGeoTags.push(this.geoTagsArray[i]);
+        }
+        return allGeoTags;
+    }
+
+
+    loadExamples() {
+
+        const tagList = GeoTagExamples.tagList;
+        tagList.forEach(tag => {
+            this.addGeoTag(new GeoTag(tag[0], tag[1], tag[2], tag[3]));
         });
+
     }
 
-    searchNearbyGeoTags({ latitude, longitude }, radius, locationName, hashTag){
-        const nearbyGeotags = this.getNearbyGeoTags({ latitude, longitude }, radius);
 
-        return nearbyGeotags.filter(geotag => {
-            const nameMatch = geotag.locationNames.toLowerCase().includes(locationName.toLowerCase());
-            const hashtagMatch = geotag.hashtags.toLowerCase().includes(hashTag.toLowerCase());
-            return nameMatch || hashtagMatch;
-          });
-    }
-    
 
 }
 
