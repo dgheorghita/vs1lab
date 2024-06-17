@@ -48,10 +48,6 @@ router.get('/', (req, res) => {
 
   const { latitude, longitude } = req.query;
 
-  console.log("req:" + req);
-  console.log("req.body:" + req.body.latitude);
-  console.log("req.query:" + req.query.latitude);
-
   res.render('index', { taglist: inMemoryStore.getAllGeoTags(), latitude: latitude, longitude: longitude })
 });
 
@@ -79,7 +75,9 @@ router.post('/tagging', (req, res) => {
   
   const taglist = inMemoryStore.getAllGeoTags();
 
+  res.redirect('/');
   res.render('index', { taglist: taglist , latitude: latitude, longitude: longitude });
+  
 });
 
 /**

@@ -34,9 +34,8 @@ class MapManager {
         try {
             // set up dynamic Leaflet map
             this.#map = L.map('map').setView([latitude, longitude], zoom);
-            var mapLink = '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy;' + map + 'contributors'
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(this.#map);
             this.#markers = L.layerGroup().addTo(this.#map);
         } catch (error) {

@@ -27,38 +27,40 @@ const GeoTag = require("./geotag");
  * - Keyword matching should include partial matches from name or hashtag fields. 
  */
 class InMemoryGeoTagStore {
-    #geoTagsArray;
+    geoTagsArray;
 
     constructor() {
-        this.#geoTagsArray = [];
+        this.geoTagsArray = [];
+        this.IDcounter = 0;
     }
 
     addGeoTag(geoTag) {
-        this.#geoTagsArray.push(geoTag);
+        geoTag.id = this.IDcounter++;
+        this.geoTagsArray.push(geoTag);
     }
 
     removeGeoTag(locationName) {
-        this.#geoTagsArray = this.geoTagsArray.filter(tag => tag.locationName !== locationName);
+        this.geoTagsArray = this.geoTagsArray.filter(tag => tag.locationName !== locationName);
     }
 
     getNearbyGeoTags(latitude, longitude, radius = 10.0) {
 
         let foundGeoTags = [];
 
-        for (let i = 0; i < this.#geoTagsArray.length; i++) {
-            const currentTag = this.#geoTagsArray[i];
+        for (let i = 0; i < this.geoTagsArray.length; i++) {
+            const currentTag = this.geoTagsArray[i];
 
             const distance = this.calcDistance(latitude, longitude, currentTag.getLatitude(), currentTag.getLongitude());
 
             if (distance <= radius) {
-                foundGeoTags.push(this.#geoTagsArray[i]);
+                foundGeoTags.push(this.geoTagsArray[i]);
             }
         }
 
         return foundGeoTags;
     }
 
-    searchNearbyGeoTags(latitude, longitude, radius = 10.0, searchterm) {
+    searchNearbyGeoTags(latitude, longitude, radius, searchterm) {
 
         let nearbyGeoTags = this.getNearbyGeoTags(latitude, longitude, radius);
 
@@ -92,8 +94,8 @@ class InMemoryGeoTagStore {
 
     getAllGeoTags() {
         let allGeoTags = [];
-        for (let i = 0; i < this.#geoTagsArray.length; i++) {
-            allGeoTags.push(this.#geoTagsArray[i]);
+        for (let i = 0; i < this.geoTagsArray.length; i++) {
+            allGeoTags.push(this.geoTagsArray[i]);
         }
         return allGeoTags;
     }

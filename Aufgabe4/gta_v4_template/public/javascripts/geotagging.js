@@ -54,3 +54,53 @@ function updateLocation() {
 document.addEventListener("DOMContentLoaded", () => {
     updateLocation();
 });
+
+/*function handleFormSubmit(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    if (!form.checkValidity()) {
+        return; // If the form is invalid, do not proceed
+    }
+
+    const formData = new FormData(form);
+    const formObject = {};
+    formData.forEach((value, key) => formObject[key] = value);
+
+    fetch(form.action, {
+        method: form.method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formObject)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        // Optionally update the UI based on response
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+// Wait for the page to fully load its DOM content, then call updateLocation
+document.addEventListener("DOMContentLoaded", () => {
+    updateLocation();
+
+    const tagForm = document.getElementById('tagForm');
+    const filterForm = document.getElementById('filterForm');
+    
+    if (tagForm) {
+        tagForm.addEventListener('submit', handleFormSubmit);
+    }
+    
+    if (filterForm) {
+        filterForm.addEventListener('submit', handleFormSubmit);
+    }
+});*/
